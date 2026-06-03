@@ -12,12 +12,12 @@ body{font-family:var(--font);color:var(--ink)}
 #panel input[type=color]{width:36px;height:30px;border:1px solid #333b45;border-radius:6px;background:#1e242c;padding:2px}
 #panel .title{font-weight:700;color:#fff;font-size:13px;text-transform:none;letter-spacing:0}
 .sw-row{display:flex;gap:5px}.sw{width:20px;height:20px;border-radius:5px;border:1px solid #333b45;cursor:pointer;padding:0}
-#print{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:12.5px}
+#print,#edit,#save{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:12.5px}
 .stage{padding:22px 0 60px;display:flex;justify-content:center}
 .sheet{width:8.5in;min-height:11in;background:#fff;box-shadow:0 4px 30px rgba(0,0,0,.25);font-size:calc(9.6pt * var(--s));line-height:1.36}
 /* sidebar */
 .sb{display:flex;min-height:11in}
-.rail{width:2.32in;background:var(--rail);color:#fff;padding:0.46in 0.3in}
+.rail{width:2.32in;background:var(--accent);color:#fff;padding:0.46in 0.3in}
 .main{flex:1;padding:0.4in 0.46in 0.32in}
 .ic{display:inline-block;width:1em;height:1em;vertical-align:-.12em;margin-right:.5em;flex:none}
 .rname{font-size:2.35em;font-weight:800;color:#fff;line-height:1.04;letter-spacing:-.4px}
@@ -69,7 +69,7 @@ h2:first-child{margin-top:0}
     <option value="Georgia,serif">Georgia</option>
   </select></label>
   <label>Text size<select id="scale"><option value="0.9">Small</option><option value="0.95">Medium</option><option value="1" selected>Default</option><option value="1.06">Large</option><option value="1.12">X-Large</option></select></label>
-  <button id="print">⌘P · Save PDF</button>
+  <button id="edit">✎ Edit text</button><button id="save">⬇ Save HTML</button><button id="print">⌘P · PDF</button>
 </div>
 <div class="stage"><div class="sheet" id="sheet"></div></div>
 <script>
@@ -139,5 +139,9 @@ $('layout').addEventListener('change',render);
 $('font').addEventListener('change',e=>document.documentElement.style.setProperty('--font',e.target.value));
 $('scale').addEventListener('change',e=>document.documentElement.style.setProperty('--s',e.target.value));
 $('print').addEventListener('click',()=>window.print());
+let editing=false;
+$('edit').addEventListener('click',()=>{editing=!editing;$('sheet').contentEditable=editing;$('sheet').style.outline=editing?'2px dashed var(--accent)':'';$('edit').textContent=editing?'✓ Done':'✎ Edit text';});
+function download(){var css=document.querySelector('style').innerHTML;var rs=getComputedStyle(document.documentElement);var acc=rs.getPropertyValue('--accent').trim();var font=rs.getPropertyValue('--font').trim();var s=rs.getPropertyValue('--s').trim();var sheet=document.getElementById('sheet').outerHTML;var doc='<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>'+css+'</style><style>html{background:#fff!important}.stage{padding:0}#panel{display:none}:root{--accent:'+acc+';--font:'+font+';--s:'+s+'}</style></head><body><div class="stage">'+sheet+'</div></body></html>';var b=new Blob([doc],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='resume.html';a.click();}
+$('save').addEventListener('click',download);
 setAccent('#635BFF'); render();
 </script></body></html>
