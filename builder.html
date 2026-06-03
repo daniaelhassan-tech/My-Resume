@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Dania El Hassan — Résumé Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#635BFF; --ink:#1c2127; --soft:#5f6770; --line:#e6e9ee; --bg:#fff;
+    --font:'Manrope','Inter',"Helvetica Neue",Arial,sans-serif;
+    --fs:10pt; --lh:1.42; --pad:0.62in; --gap:15px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#5b616b}
+  body{font-family:var(--font);color:var(--ink)}
+
+  /* ---- control panel (screen only) ---- */
+  #panel{position:sticky;top:0;z-index:20;background:#11151b;color:#e6e9ee;
+    padding:11px 16px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;
+    font:13px/1.2 -apple-system,Segoe UI,Roboto,Arial,sans-serif;box-shadow:0 2px 14px rgba(0,0,0,.3)}
+  #panel label{display:flex;flex-direction:column;gap:3px;color:#9aa3ad;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+  #panel select,#panel input[type=text]{background:#1e242c;color:#fff;border:1px solid #333b45;border-radius:6px;padding:5px 7px;font-size:12.5px}
+  #panel input[type=color]{width:38px;height:30px;border:1px solid #333b45;border-radius:6px;background:#1e242c;padding:2px}
+  #panel .title{font-weight:700;color:#fff;font-size:13px;text-transform:none;letter-spacing:0;margin-right:4px}
+  .sw-row{display:flex;gap:5px}.sw{width:20px;height:20px;border-radius:5px;border:1px solid #333b45;cursor:pointer;padding:0}
+  #print{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:8px 15px;font-weight:700;cursor:pointer;font-size:12.5px}
+  #hint{color:#79828d;font-size:11px;width:100%;margin-top:-2px}
+
+  /* ---- sheet ---- */
+  .stage{padding:22px 0 60px;display:flex;justify-content:center}
+  .sheet{width:8.5in;min-height:11in;background:var(--bg);box-shadow:0 4px 30px rgba(0,0,0,.25)}
+  .bar{height:6px;display:flex}.bar i{flex:1}
+  .wrap{padding:var(--pad) 0.75in 0.5in}
+
+  .head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+  .name{font-size:27pt;font-weight:800;letter-spacing:-.5px;line-height:1.03}
+  .tag{color:var(--accent);font-size:10.5pt;font-weight:600;margin-top:6px}
+  .uline{height:4px;width:120px;display:flex;margin-top:7px;border-radius:3px;overflow:hidden}.uline i{flex:1}
+  .contact{text-align:right;font-size:8.7pt;color:var(--soft);line-height:1.7;white-space:nowrap}
+  .contact a{color:var(--accent);text-decoration:none;font-weight:700}
+
+  .band{background:var(--accent);color:#fff;padding:24px 0.75in 20px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+  .band .name{color:#fff}.band .tag{color:rgba(255,255,255,.9)}.band .contact{color:rgba(255,255,255,.92)}
+  .band .contact a{color:#fff}
+
+  h2{font-size:8.4pt;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:800;margin:var(--gap) 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+  .summary{font-size:calc(var(--fs) + .3pt);line-height:1.5;color:#2b2f35}
+  .jh{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;gap:12px}
+  .jt{font-size:10.6pt;font-weight:700}.jt .c{color:var(--accent)}
+  .jm{font-size:8.7pt;color:var(--soft);font-style:italic;white-space:nowrap}
+  .scope{color:#34393f;font-size:9.6pt;margin:2px 0 4px}
+  ul{list-style:none}li{position:relative;padding-left:14px;margin:0 0 2.6px;font-size:9.7pt;line-height:1.37}
+  li::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;background:var(--accent);border-radius:50%}
+  .b{font-weight:700}.mini li{margin-bottom:1.6px}
+  .ftp{font-size:9.4pt;line-height:1.5;color:#34393f}.ftp .b{color:var(--ink)}
+
+  /* sidebar layout */
+  .sb{display:flex}
+  .rail{width:2.5in;background:var(--accent);color:#fff;padding:0.55in 0.34in}
+  .rail .name{color:#fff;font-size:22pt}.rail .tag{color:rgba(255,255,255,.85);font-size:9.3pt}
+  .rh{font-size:7.8pt;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:700;margin:18px 0 5px}
+  .rail p,.rail li{font-size:8.8pt;line-height:1.55;color:rgba(255,255,255,.95)}
+  .rail ul li{padding-left:11px}.rail ul li::before{background:rgba(255,255,255,.8)}
+  .rail a{color:#fff;text-decoration:none}
+  .sbmain{flex:1;padding:0.55in 0.55in 0.5in}
+
+  /* density compact */
+  body[data-density="compact"]{--fs:9.4pt;--gap:11px;--pad:0.5in}
+  body[data-density="compact"] .name{font-size:24pt}
+  body[data-density="compact"] li{margin-bottom:2px;font-size:9.3pt}
+
+  @media print{
+    html{background:#fff}#panel{display:none}.stage{padding:0}
+    .sheet{box-shadow:none;width:auto;min-height:auto}
+    @page{size:letter;margin:0}
+  }
+</style></head><body data-layout="sidebar" data-density="comfortable">
+
+<div id="panel">
+  <span class="title">Résumé Builder</span>
+  <label>Company / Preset
+    <select id="preset">
+      <option>Generic</option><option>Figma</option><option>Google</option>
+      <option>Microsoft</option><option>Anthropic</option><option selected>Stripe</option><option>Notion</option><option>Custom</option>
+    </select>
+  </label>
+  <label>Company name
+    <input type="text" id="company" placeholder="type a company…" size="13">
+  </label>
+  <label>Accent
+    <input type="color" id="accent" value="#26415e">
+  </label>
+  <label>Curated accents
+    <div class="sw-row">
+      <button class="sw" data-c="#26415E" style="background:#26415E" title="Slate Navy"></button>
+      <button class="sw" data-c="#0F6E63" style="background:#0F6E63" title="Pine"></button>
+      <button class="sw" data-c="#3F3DBA" style="background:#3F3DBA" title="Indigo"></button>
+      <button class="sw" data-c="#7B2D3B" style="background:#7B2D3B" title="Oxblood"></button>
+      <button class="sw" data-c="#2B2F36" style="background:#2B2F36" title="Charcoal"></button>
+      <button class="sw" data-c="#C2613A" style="background:#C2613A" title="Terracotta"></button>
+    </div>
+  </label>
+  <label>Color bar
+    <select id="bar"><option value="solid">Solid</option><option value="multi">Multicolor</option><option value="none">None</option></select>
+  </label>
+  <label>Header
+    <select id="header"><option value="plain">Plain</option><option value="band">Band</option></select>
+  </label>
+  <label>Layout
+    <select id="layout"><option value="stack">Single column</option><option value="sidebar" selected>Sidebar</option></select>
+  </label>
+  <label>Font
+    <select id="font">
+      <option value="'Manrope','Inter',Arial,sans-serif">Manrope</option>
+      <option value="'Inter','Helvetica Neue',Arial,sans-serif">Inter / Sans</option>
+      <option value="'Helvetica Neue',Arial,sans-serif">Helvetica</option>
+      <option value="'Roboto',Arial,sans-serif">Roboto</option>
+      <option value="Georgia,'Times New Roman',serif">Georgia / Serif</option>
+      <option value="'Charter','Iowan Old Style',Georgia,serif">Charter / Serif</option>
+    </select>
+  </label>
+  <label>Density
+    <select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select>
+  </label>
+  <button id="print">⌘P · Save PDF</button>
+  <div id="hint">Tip: pick a company (or type one) to auto-skin accent + color bar. Then ⌘P → “Save as PDF.” Controls won’t print.</div>
+</div>
+
+<div class="stage"><div class="sheet" id="sheet"></div></div>
+
+<script>
+const DATA = {
+  name:"Dania El Hassan",
+  tagline:"Product Leadership · Strategy · Go-to-Market & Partnerships",
+  contact:["New York, NY","315-729-7552","dania.elhassan@gmail.com","linkedin.com/in/daniaelhassan"],
+  website:{label:"daniaelhassan.com",href:"https://daniaelhassan.com"},
+  github:{label:"github.com/daniaelhassan-tech",href:"https://github.com/daniaelhassan-tech"},
+  substack:{label:"@daniaelhassan1",href:"https://substack.com/@daniaelhassan1"},
+  summary:"I&#8217;m a product leader with 15+ years of experience building software that helps designers &amp; engineers do their best work together. As Global Head of Product for AutoCAD, I ran a $2B+ enterprise platform used by millions in accuracy-critical work. I launched it in the browser, built the shared collaboration environment behind it with leading partners and defined the AI strategy that put new AI and MCP capabilities in front of 1M+ technical designers. I&#8217;m known for building high-trust, collaborative teams empowered to make amazing new things with AI.",
+  expertise:["Enterprise SaaS & monetization","GTM partnerships & BD","Product-led growth","AI product strategy","Platform & data","Team building & transformation"],
+  experience:[
+    {co:"Autodesk",title:"Director, Global Head of Product Management, AutoCAD",meta:"San Francisco · 2015–2025",
+     scope:"Owned product, strategy, and growth for the AutoCAD line: 8 toolsets, web, mobile, and developer ecosystem. Doubled the business to $2B+ over six years.",
+     bullets:[
+       ["SaaS transformation","led the perpetual-to-subscription shift and re-architected the company-wide entitlement system, enabling new web and mobile business models."],
+       ["GTM partnerships","negotiated co-integration deals with Google, Microsoft, Dropbox, and Box, giving customers access to 10B+ files stored outside Autodesk and driving cross-platform growth."],
+       ["New enterprise offering","brought Autodesk Docs to market, aligning product, sales, strategy, and marketing."],
+       ["Product-led growth","launched AutoCAD Web from zero to 80K+ MAU and ran packaging, onboarding, and upsell experiments to grow SMB self-serve revenue."],
+       ["AI strategy","defined the AI roadmap and shipped an MCP server plus 8+ automations to 1M+ engineers, designed to be safe and reversible in accuracy-critical work."],
+       ["Leadership","grew the team from 3 to 12 PMs and 3 senior managers, built exec-level customer relationships, and owned the executive product narrative at Autodesk University."]
+     ]},
+    {co:"Fieldwire Labs",title:"Director of Customer Success",meta:"San Francisco · 2014",
+     bullets:[[null,"Built the customer-success function from scratch; the go-to-market motion acquired 7 enterprise logos."]]},
+    {co:"Onshape",title:"Strategy & Marketing Manager",meta:"Belmont, MA · 2013",
+     bullets:[[null,"Built TAM/SAM models, segmentation, and pricing strategy for cloud CAD."]]},
+    {co:"Turner Construction",title:"Virtual Technologies & Field Engineering",meta:"Boston · 2008–2012",
+     bullets:[[null,"Led 3D coordination and field teams on $300M+ projects (~$2M saved); launched a lidar AR/VR service for owners including Partners Healthcare and Harvard."]]}
+  ],
+  education:[
+    {school:"MIT Sloan School of Management",degree:"MBA · Entrepreneurship & Innovation",meta:"Cambridge, MA · 2012–2014"},
+    {school:"Tufts University",degree:"BS, Civil Engineering",meta:"Medford, MA · 2004–2008"}
+  ],
+  educationExtra:"UC Berkeley — Product Management Certificate · Andrew Ng Machine Learning (Coursera)",
+  speaking:"Owned the executive product narrative at Autodesk University, 2018–2024 (~4,000 viewers). Authored the AutoCAD Web narrative presented at Google I/O 2018. Panelist, Wharton Future of Cities. Featured in Architosh, Engineering.com, and ITmedia Japan.",
+  beyond:"AI coding projects · Product & startup consulting · Wingfoiling · Arts · Languages: French, Arabic, Spanish"
+};
+
+const PRESETS = {
+  Generic:{accent:"#26415e",bar:["#26415e"],barStyle:"solid"},
+  Figma:{accent:"#A259FF",bar:["#F24E1E","#FF7262","#A259FF","#1ABCFE","#0ACF83"],barStyle:"multi"},
+  Google:{accent:"#1a73e8",bar:["#4285F4","#EA4335","#FBBC04","#34A853"],barStyle:"multi"},
+  Microsoft:{accent:"#0067b8",bar:["#F25022","#7FBA00","#00A4EF","#FFB900"],barStyle:"multi"},
+  Anthropic:{accent:"#cc785c",bar:["#cc785c"],barStyle:"solid"},
+  Stripe:{accent:"#635BFF",bar:["#635BFF"],barStyle:"solid"},
+  Notion:{accent:"#2f3437",bar:["#2f3437"],barStyle:"solid"}
+};
+
+const $=id=>document.getElementById(id);
+let barColors=["#26415e"];
+let accentColor="#26415e";
+
+function contactHTML(){
+  let c = DATA.contact.join("<br>");
+  c += '<br><a href="'+DATA.website.href+'">'+DATA.website.label+'</a>';
+  c += '<br><a href="'+DATA.github.href+'">'+DATA.github.label+'</a>';
+  c += '<br><a href="'+DATA.substack.href+'">'+DATA.substack.label+'</a>';
+  return c;
+}
+function expHTML(){
+  return DATA.experience.map(j=>{
+    let h='<div class="jh"><div class="jt"><span class="c">'+j.co+'</span> / '+j.title+'</div><div class="jm">'+j.meta+'</div></div>';
+    if(j.scope) h+='<div class="scope">'+j.scope+'</div>';
+    const cls = j.scope ? '' : ' class="mini"';
+    h+='<ul'+cls+'>'+j.bullets.map(b=> '<li>'+(b[0]?'<span class="b">'+b[0]+':</span> ':'')+b[1]+'</li>').join('')+'</ul>';
+    return h;
+  }).join('');
+}
+function eduHTML(){
+  let h=DATA.education.map(e=>'<div class="jh"><div class="jt"><span class="c">'+e.school+'</span> / '+e.degree+'</div><div class="jm">'+e.meta+'</div></div>').join('');
+  if(DATA.educationExtra) h+='<p class="ftp" style="margin-top:4px">'+DATA.educationExtra+'</p>';
+  return h;
+}
+function barHTML(){
+  const style=$('bar').value;
+  if(style==='none') return '';
+  const cols = style==='multi'?barColors:[accentColor];
+  return '<div class="bar">'+cols.map(c=>'<i style="background:'+c+'"></i>').join('')+'</div>';
+}
+function ulineHTML(){ /* google-style underline under name for plain header */ 
+  if($('bar').value!=='multi') return '';
+  return '<div class="uline">'+barColors.map(c=>'<i style="background:'+c+'"></i>').join('')+'</div>';
+}
+
+function render(){
+  const layout=$('layout').value;
+  document.body.dataset.layout=layout;
+  const sheet=$('sheet');
+  if(layout==='sidebar'){
+    sheet.innerHTML =
+      '<div class="sb"><div class="rail">'+
+        '<div class="name">'+DATA.name.replace(' ','<br>')+'</div>'+
+        '<div class="tag">'+DATA.tagline+'</div>'+
+        '<div class="rh">Contact</div><p>'+contactHTML()+'</p>'+
+        '<div class="rh">Expertise</div><ul>'+DATA.expertise.map(e=>'<li>'+e+'</li>').join('')+'</ul>'+
+        '<div class="rh">Beyond Work</div><p>'+DATA.beyond+'</p>'+
+      '</div><div class="sbmain">'+
+        '<h2>Summary</h2><p class="summary">'+DATA.summary+'</p>'+
+        '<h2>Experience</h2>'+expHTML()+
+        '<h2>Education</h2>'+eduHTML()+
+        '<h2>Speaking & Thought Leadership</h2><p class="ftp">'+DATA.speaking+'</p>'+
+      '</div></div>';
+  } else {
+    const band = $('header').value==='band';
+    const headerBlock = band
+      ? '<div class="band"><div><div class="name">'+DATA.name+'</div><div class="tag">'+DATA.tagline+'</div></div><div class="contact">'+contactHTML()+'</div></div>'
+      : '<div class="wrap" style="padding-bottom:0"><div class="head"><div><div class="name">'+DATA.name+'</div>'+ulineHTML()+'<div class="tag">'+DATA.tagline+'</div></div><div class="contact">'+contactHTML()+'</div></div></div>';
+    sheet.innerHTML = barHTML()+ headerBlock +
+      '<div class="wrap" style="padding-top:'+(band?'18px':'10px')+'">'+
+        '<h2>Summary</h2><p class="summary">'+DATA.summary+'</p>'+
+        '<h2>Experience</h2>'+expHTML()+
+        '<h2>Education</h2>'+eduHTML()+
+        '<h2>Speaking & Thought Leadership</h2><p class="ftp">'+DATA.speaking+'</p>'+
+        '<h2>Beyond Work</h2><p class="ftp">'+DATA.beyond+'</p>'+
+      '</div>';
+  }
+}
+
+function applyPreset(name){
+  const p=PRESETS[name]; if(!p) return;
+  document.documentElement.style.setProperty('--accent',p.accent);
+  accentColor=p.accent; $('accent').value=p.accent; barColors=p.bar.slice(); $('bar').value=p.barStyle;
+}
+function setAccent(c){ accentColor=c; document.documentElement.style.setProperty('--accent',c); if($('bar').value!=='multi') barColors=[c]; }
+
+// wiring
+$('preset').addEventListener('change',e=>{ if(e.target.value!=='Custom'){applyPreset(e.target.value);} render(); });
+$('company').addEventListener('input',e=>{
+  const v=e.target.value.trim().toLowerCase();
+  const match=Object.keys(PRESETS).find(k=>k.toLowerCase()===v);
+  if(match){ $('preset').value=match; applyPreset(match); render(); }
+});
+$('accent').addEventListener('input',e=>{ $('preset').value='Custom'; setAccent(e.target.value); render(); });
+$('bar').addEventListener('change',render);
+$('header').addEventListener('change',render);
+$('layout').addEventListener('change',render);
+$('font').addEventListener('change',e=>{ document.documentElement.style.setProperty('--font',e.target.value); });
+$('density').addEventListener('change',e=>{ document.body.dataset.density=e.target.value; });
+$('print').addEventListener('click',()=>window.print());
+
+document.querySelectorAll('.sw').forEach(b=>b.addEventListener('click',()=>{$('preset').value='Custom';$('accent').value=b.dataset.c;setAccent(b.dataset.c);render();}));
+applyPreset('Stripe'); render();
+</script>
+</body></html>
