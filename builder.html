@@ -120,7 +120,7 @@ function render(){
     '<div class="rname">'+DATA.name.replace(' ','<br>')+'</div>'+
     '<div class="rh">Contact</div><div class="cp">'+DATA.location+'</div><div class="cp">'+DATA.email+'</div>'+linksHTML()+
     '<div class="rh">Expertise</div><ul class="exul">'+DATA.expertise.map(e=>'<li>'+e+'</li>').join('')+'</ul>'+
-    '<div class="rh">Beyond Work</div><ul class="rul">'+DATA.beyond.map(b=>'<li><span>'+b[0]+'</span> '+b[1]+'</li>').join('')+'</ul>'+
+    '<div class="rh">Beyond Work</div><ul class="exul">'+DATA.beyond.map(b=>'<li>'+b[1]+'</li>').join('')+'</ul>'+
     '<div class="rh">Languages</div><div class="cp">'+DATA.languages+'</div>'+
     '</aside><main class="main">'+main+'</main></div>';
  } else {
